@@ -7,6 +7,7 @@
 
 
 import { callWithRequestFactory } from '../client/call_with_request_factory';
+import { callWithRequestFactory as rollupCallWithRequestFactory } from '../../../rollup/server/lib/call_with_request_factory';
 import { wrapError } from '../client/errors';
 import { fieldsServiceProvider } from '../models/fields_service';
 
@@ -62,7 +63,8 @@ export function fieldsService(server, commonRouteConfig) {
     method: 'POST',
     path: '/api/ml/fields_service/time_field_range',
     handler(request) {
-      const callWithRequest = callWithRequestFactory(server, request);
+      const callWithRequest = rollupCallWithRequestFactory(server, request);
+      //const callWithRequest = callWithRequestFactory(server, request);
       return getTimeFieldRange(callWithRequest, request.payload)
         .catch(resp => wrapError(resp));
     },

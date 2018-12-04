@@ -92,7 +92,7 @@ export function fieldsServiceProvider(callWithRequest) {
     return new Promise((resolve, reject) => {
       const obj = { success: true, start: { epoch: 0, string: '' }, end: { epoch: 0, string: '' } };
 
-      callWithRequest('search', {
+      callWithRequest('rollup.search', {
         index,
         size: 0,
         body: {
@@ -122,6 +122,7 @@ export function fieldsServiceProvider(callWithRequest) {
           resolve(obj);
         })
         .catch((resp) => {
+          console.log('!!! catch error resp from getTimeFieldRange:', resp);
           reject(resp);
         });
     });

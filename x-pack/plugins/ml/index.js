@@ -26,9 +26,10 @@ import { jobServiceRoutes } from './server/routes/job_service';
 import { jobAuditMessagesRoutes } from './server/routes/job_audit_messages';
 import { fileDataVisualizerRoutes } from './server/routes/file_data_visualizer';
 
+
 export const ml = (kibana) => {
   return new kibana.Plugin({
-    require: ['kibana', 'elasticsearch', 'xpack_main'],
+    require: ['kibana', 'elasticsearch', 'xpack_main', 'rollup'],
     id: 'ml',
     configPrefix: 'xpack.ml',
     publicDir: resolve(__dirname, 'public'),

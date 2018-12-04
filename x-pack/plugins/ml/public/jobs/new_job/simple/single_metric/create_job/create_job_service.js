@@ -65,11 +65,15 @@ export function SingleMetricJobServiceProvider() {
         };
 
         const searchJson = getSearchJsonFromConfig(formConfig);
+        console.log('!!! searchJson for line chart:', searchJson);
 
-        ml.esSearch(searchJson)
+        //ml.esSearch(searchJson)
+        const esSearchFn = ml.esSearchForIndexPattern(formConfig.indexPattern);
+        esSearchFn(searchJson)
           .then((resp) => {
-
-            const aggregationsByTime = _.get(resp, ['aggregations', 'times', 'buckets'], []);
+            console.log('!!! resp from search:', resp);
+            const result = Array.isArray(resp) ? resp[0] : resp;
+            const aggregationsByTime = _.get(result, ['aggregations', 'times', 'buckets'], []);
             let highestValue = 0;
 
             _.each(aggregationsByTime, (dataForTime) => {
@@ -95,7 +99,10 @@ export function SingleMetricJobServiceProvider() {
               };
             });
 
-            this.chartData.totalResults = resp.hits.total;
+            this.chartData.totalResults = Array.isArray(resp) ? aggregationsByTime.length : resp.hits.total;
+
+            console.log('!!! chartData results:', obj.results);
+
             this.chartData.line = processLineChartResults(obj.results);
 
             this.chartData.highestValue = Math.ceil(highestValue);
@@ -110,6 +117,7 @@ export function SingleMetricJobServiceProvider() {
             resolve(this.chartData);
           })
           .catch((resp) => {
+            console.log('!!! error resp from search:', resp);
             reject(resp);
           });
 
@@ -433,6 +441,7 @@ function getSearchJsonFromConfig(formConfig) {
     rest_total_hits_as_int: true,
     body: {
       query: {},
+      size: 0,
       aggs: {
         times: {
           date_histogram: {

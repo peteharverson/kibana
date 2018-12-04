@@ -25,14 +25,21 @@ export function SearchItemsProvider(Private, $route, config) {
       language: 'lucene'
     };
 
+    // let combinedQuery = {
+    //   bool: {
+    //     must: [{
+    //       query_string: {
+    //         analyze_wildcard: true,
+    //         query: '*'
+    //       }
+    //     }]
+    //   }
+    // };
+
+
     let combinedQuery = {
       bool: {
-        must: [{
-          query_string: {
-            analyze_wildcard: true,
-            query: '*'
-          }
-        }]
+        must: [{ match_all: {} }]
       }
     };
 

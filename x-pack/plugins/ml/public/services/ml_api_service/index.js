@@ -411,6 +411,26 @@ export const ml = {
     });
   },
 
+  esRollupSearch(obj) {
+    const rollupBasePath = chrome.addBasePath('/api/rollup');
+    return http({
+      url: `${rollupBasePath}/search`,
+      method: 'POST',
+      data: [{
+        index: obj.index,
+        query: obj.body
+      }]
+    });
+  },
+
+  esSearchForIndexPattern(indexPattern) {
+    if (indexPattern.type === 'rollup') {
+      return this.esRollupSearch;
+    } else {
+      return this.esSearch;
+    }
+  },
+
   getIndices() {
     const tempBasePath = chrome.addBasePath('/api');
     return http({
